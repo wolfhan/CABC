@@ -2,11 +2,13 @@
 
 int countEscapeSequences();
 void shrinkBlanks();
+void printEscapeSequences();
 
 int main()
 {
   //int number = countEscapeSequences();
-  shrinkBlanks();
+  //shrinkBlanks();
+  printEscapeSequences();
   return 0;
 }
 
@@ -41,4 +43,27 @@ void shrinkBlanks()
 	putchar(c);
       }
   }
+}
+
+/* Print tab and backspace */
+void printEscapeSequences()
+{
+    int c;
+    while ((c = getchar()) != EOF)
+    {
+        if (c == '\t')
+        {
+            putchar('\\');
+  	    putchar('t');	    
+        }
+	else if (c == '\b')
+	{
+	    putchar('\\');
+	    putchar('b');
+	}
+	else
+	{
+	    putchar(c);
+	}
+    }
 }
