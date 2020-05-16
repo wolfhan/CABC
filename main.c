@@ -7,13 +7,15 @@ int countEscapeSequences();
 void shrinkBlanks();
 void printEscapeSequences();
 void countLineWordChar();
+void printOneWordPerLine();
 
 int main()
 {
   //int number = countEscapeSequences();
   //shrinkBlanks();
   //printEscapeSequences();
-  countLineWordChar();
+  //countLineWordChar();
+  printOneWordPerLine();
   return 0;
 }
 
@@ -92,4 +94,23 @@ void countLineWordChar()
 	}
     }
     printf("%d %d %d\n", nl, nw, nc);
+}
+
+/* print one word per line */
+void printOneWordPerLine()
+{
+    int c, state;
+    state = OUT;
+    while ((c = getchar()) != EOF)
+    {
+	if (c == ' ' || c == '\n' || c == '\t') {
+	    state = OUT;
+	    putchar('\n');
+        } else if (state == OUT) {
+	    state = IN;
+	    putchar(c);
+	} else {
+	    putchar(c);
+	}
+    }
 }
