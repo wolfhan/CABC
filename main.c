@@ -9,6 +9,7 @@ void printEscapeSequences();
 void countLineWordChar();
 void printOneWordPerLine();
 void countCharacters();
+void printWordLengthHistogram();
 
 int main()
 {
@@ -17,41 +18,42 @@ int main()
     //printEscapeSequences();
     //countLineWordChar();
     //printOneWordPerLine();
-    countCharacters();
+    //countCharacters();
+    printWordLengthHistogram();
     return 0;
 }
 
 /* count blanks, tabs and lines in input */
 int countEscapeSequences()
 {
-  int c, number;
-  number = 0;
-  while ((c = getchar()) != EOF)
-      if (c == ' ' || c == '\t' || c == '\n')
-	  ++number;
-  printf("%d\n", number);
-  return number;
+    int c, number;
+    number = 0;
+    while ((c = getchar()) != EOF)
+        if (c == ' ' || c == '\t' || c == '\n')
+	        ++number;
+    printf("%d\n", number);
+    return number;
 }
 
 /* Replace more than one blanks by single blank */
 void shrinkBlanks()
 {
-  int c, number = 0;
-  while ((c = getchar()) != EOF)
-  {
-      if (c == ' ')
-      {
-	++number;
-      }
-      else
-      {
-	number = 0;
-      }
-      if (number <= 1)
-      {
-	putchar(c);
-      }
-  }
+    int c, number = 0;
+    while ((c = getchar()) != EOF)
+    {
+        if (c == ' ')
+        {
+	        ++number;
+        }
+        else
+        {
+	        number = 0;
+        }
+        if (number <= 1)
+        {
+	        putchar(c);
+        }
+    }
 }
 
 /* Print tab and backspace */
@@ -63,17 +65,17 @@ void printEscapeSequences()
         if (c == '\t')
         {
             putchar('\\');
-  	    putchar('t');	    
+  	        putchar('t');	    
         }
-	else if (c == '\b')
-	{
-	    putchar('\\');
-	    putchar('b');
-	}
-	else
-	{
-	    putchar(c);
-	}
+	    else if (c == '\b')
+	    {
+	        putchar('\\');
+	        putchar('b');
+	    }
+	    else
+	    {
+	        putchar(c);
+	    }
     }
 }
 
@@ -85,15 +87,15 @@ void countLineWordChar()
     nl = nw = nc = 0;
     while ((c = getchar()) != EOF)
     {
-	++nc;
-	if (c == '\n')
-	    ++nl;
-	if (c == ' ' || c == '\n' || c == '\t')
-	    state = OUT;
-	else if (state == OUT) {
-	    state = IN;
-	    ++nw;
-	}
+	    ++nc;
+	    if (c == '\n')
+	        ++nl;
+	    if (c == ' ' || c == '\n' || c == '\t')
+	        state = OUT;
+	    else if (state == OUT) {
+	        state = IN;
+	        ++nw;
+	    }
     }
     printf("%d %d %d\n", nl, nw, nc);
 }
@@ -105,15 +107,15 @@ void printOneWordPerLine()
     state = OUT;
     while ((c = getchar()) != EOF)
     {
-	if (c == ' ' || c == '\n' || c == '\t') {
-	    state = OUT;
-	    putchar('\n');
+	    if (c == ' ' || c == '\n' || c == '\t') {
+	        state = OUT;
+	        putchar('\n');
         } else if (state == OUT) {
-	    state = IN;
-	    putchar(c);
-	} else {
-	    putchar(c);
-	}
+	        state = IN;
+	        putchar(c);
+	    } else {
+	        putchar(c);
+	    }
     }
 }
 
@@ -124,16 +126,46 @@ void countCharacters()
     int ndigit[10];
     nwhite = nother = 0;
     for (i = 0; i < 10; ++i)
-	ndigit[i] = 0;
+	    ndigit[i] = 0;
     while ((c = getchar()) != EOF)
-	if (c >= '0' && c <= '9')
-	    ++ndigit[c - '0'];
+	    if (c >= '0' && c <= '9')
+	        ++ndigit[c - '0'];
     	else if (c == ' ' || c == '\n' || c == '\t')
-	    ++nwhite;
+	        ++nwhite;
     	else 
-	    ++nother;
+	        ++nother;
     printf("digits =");
     for (i = 0; i < 10; ++i)
-	printf(" %d", ndigit[i]);
+	    printf(" %d", ndigit[i]);
     printf(", white space = %d, other = %d\n", nwhite, nother);
+}
+
+/* print histogram of the lengths of words */
+void printWordLengthHistogram()
+{
+    int c, i, nc = 0, state = OUT;
+    int lengths[10];
+    for (i = 0; i < 10; i++)
+        lengths[i] = 0;
+    while ((c = getchar()) != EOF)
+    {
+        if (c == ' ' || c == '\n' || c == '\t')
+        {
+            if (nc >= 1 && nc <= 10)
+            {
+                ++lengths[nc - 1];
+                nc = 0;
+            }
+        }
+        else
+        {
+            nc++;
+        }
+    }
+    for (i = 1; i <= 10; i++)
+        printf("%2d ", i);
+    printf("\n");
+    for (i = 0; i < 10; i++)
+        printf("%2d ", lengths[i]);
+    printf("\n");
 }
