@@ -10,6 +10,7 @@ void countLineWordChar();
 void printOneWordPerLine();
 void countCharacters();
 void printWordLengthHistogram();
+void printCharacterFrequencies();
 
 int main()
 {
@@ -19,7 +20,8 @@ int main()
     //countLineWordChar();
     //printOneWordPerLine();
     //countCharacters();
-    printWordLengthHistogram();
+    //printWordLengthHistogram();
+    printCharacterFrequencies();
     return 0;
 }
 
@@ -167,5 +169,27 @@ void printWordLengthHistogram()
     printf("\n");
     for (i = 0; i < 10; i++)
         printf("%2d ", lengths[i]);
+    printf("\n");
+}
+
+/* print histogram of frequencies of different characters */
+void printCharacterFrequencies()
+{
+    int c, i, nc = 0;
+    int frequencies[26];
+    for (i = 0; i < 26; i++)
+        frequencies[i] = 0;
+    while ((c = getchar()) != EOF)
+    {
+        if(c >= 'a' && c <= 'z')
+        {
+            ++frequencies[c - 'a'];
+        }
+    }
+    for (i = 'a'; i <= 'z'; i++)
+        printf("%2c ", i);
+    printf("\n");
+    for (i = 0; i < 26; i++)
+        printf("%2d ", frequencies[i]);
     printf("\n");
 }
