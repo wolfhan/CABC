@@ -193,3 +193,12 @@ void printCharacterFrequencies()
         printf("%2d ", frequencies[i]);
     printf("\n");
 }
+
+/* power: raise baee to n-th power; n >= 0; version 2 */
+int power(int base, int n)
+{
+    int p;
+    for (p = 1; n > 0; --n)
+        p = p * base;
+    return p;
+}
