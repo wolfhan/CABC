@@ -11,6 +11,7 @@ void printOneWordPerLine();
 void countCharacters();
 void printWordLengthHistogram();
 void printCharacterFrequencies();
+int power(int base, int n);
 
 int main()
 {
@@ -21,7 +22,9 @@ int main()
     //printOneWordPerLine();
     //countCharacters();
     //printWordLengthHistogram();
-    printCharacterFrequencies();
+    //printCharacterFrequencies();
+    int num = power(2, 4);
+    printf("2^4=%d\n", num);
     return 0;
 }
 
