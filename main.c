@@ -2,6 +2,7 @@
 
 #define IN 1 /* inside a word */
 #define OUT 0 /* outside a word */
+#define MAXLINE 1000
 
 int countEscapeSequences();
 void shrinkBlanks();
@@ -11,6 +12,8 @@ void printOneWordPerLine();
 void countCharacters();
 void printWordLengthHistogram();
 void printCharacterFrequencies();
+void printChars();
+int getchars(char line[], int maxline);
 
 int main()
 {
@@ -21,7 +24,8 @@ int main()
     //printOneWordPerLine();
     //countCharacters();
     //printWordLengthHistogram();
-    printCharacterFrequencies();
+    //printCharacterFrequencies();
+    printChars();
     return 0;
 }
 
@@ -202,3 +206,30 @@ int power(int base, int n)
         p = p * base;
     return p;
 }
+
+void printChars()
+{
+    int len;
+    int total;
+    char chars[MAXLINE];
+
+    len = getchars(chars, MAXLINE);
+
+    if (len > 0) {
+        total = len;
+        printf("total=%d\n", total);
+        printf("chars=\n%s", chars);
+    }
+}
+
+int getchars(char s[], int lim)
+{
+    int c, i;
+    for (i = 0; i < lim - 1 && (c = getchar()) != EOF; ++i)
+        s[i] = c;
+    s[i] = '\0';
+    return i;
+}
+
+
+
