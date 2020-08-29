@@ -14,6 +14,8 @@ void printWordLengthHistogram();
 void printCharacterFrequencies();
 void printChars();
 int getchars(char line[], int maxline);
+void printGt80Chars();
+int getlinechar(char line[], int maxline);
 
 int main()
 {
@@ -25,7 +27,8 @@ int main()
     //countCharacters();
     //printWordLengthHistogram();
     //printCharacterFrequencies();
-    printChars();
+    //printChars();
+    printGt80Chars();
     return 0;
 }
 
@@ -231,5 +234,35 @@ int getchars(char s[], int lim)
     return i;
 }
 
+void printGt80Chars()
+{
+    int len;
+    char line[MAXLINE];
+    while ((len = getlinechar(line, MAXLINE)) > 0)
+    {
+        if (len > 80)
+        {
+            printf("char number=%d\n", len);
+            printf("chars=%s\n", line);
+        }
+        else
+        {
+            printf("less than 80 chars\n");
+        }
+    }
+}
 
+int getlinechar(char s[], int lim)
+{
+    int c, i;
+    for (i = 0; i < lim - 1 && (c = getchar()) != EOF && c != '\n'; ++i)
+        s[i] = c;
+    if (c == '\n')
+    {
+        s[i] = '\n';
+        i++;
+    }
+    s[i] = '\0';
+    return i;
+}
 
