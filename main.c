@@ -12,6 +12,7 @@ void printOneWordPerLine();
 void countCharacters();
 void printWordLengthHistogram();
 void printCharacterFrequencies();
+int power(int base, int n);
 void printChars();
 int getchars(char line[], int maxline);
 void printGt80Chars();
