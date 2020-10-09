@@ -1,11 +1,19 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "calc.h"
 
 #define IN 1 /* inside a word */
 #define OUT 0 /* outside a word */
 #define MAXLINE 1000
 #define MAXOP 100
+#define MAXLINES 5000
+#define MAXLEN 1000
+#define ALLOCSIZE 10000
+
+char *lineptr[MAXLINES];
+static char allocbuf[ALLOCSIZE];
+static char *allocp = allocbuf;
 
 int countEscapeSequences();
 void shrinkBlanks();
@@ -21,6 +29,12 @@ int getchars(char line[], int maxline);
 void printGt80Chars();
 int getlinechar(char line[], int maxline);
 void reversePolishCalculator();
+void printsortedlines();
+int readlines(char *lineptr[], int nlines);
+void writelines(char *lineptr[], int nlines);
+void qsortchar(char *lineptr[], int left, int right);
+char *alloc(int);
+void afree(char *);
 
 int main()
 {
@@ -35,6 +49,7 @@ int main()
     //printChars();
     //printGt80Chars();
     //reversePolishCalculator();
+    printsortedlines();
     return 0;
 }
 
@@ -309,3 +324,77 @@ int getlinechar(char s[], int lim)
 //        }       
 //    }
 //}
+
+void printsortedlines()
+{
+    int nlines;
+    if ((nlines = readlines(lineptr, MAXLINES)) >= 0) {
+        qsortchar(lineptr, 0, nlines - 1);
+        writelines(lineptr, nlines);
+    } else {
+        printf("error: input too big to sort\n");
+    }
+}
+
+int readlines(char *lineptr[], int maxlines)
+{
+    int len, nlines;
+    char *p, line[MAXLEN];
+    nlines = 0;
+    while ((len = getlinechar(line, MAXLEN)) > 0)
+        if (nlines >= maxlines || (p = malloc(len)) == NULL)
+            return -1;
+        else {
+            line[len - 1] = '\0';
+            strcpy(p, line);
+            lineptr[nlines++] = p;
+        }
+    return nlines;
+}
+
+void writelines(char *lineptr[], int nlines)
+{
+    int i;
+    for (i = 0; i < nlines; i++)
+        printf("%s\n", lineptr[i]);
+}
+
+/* qsortchar: sort v[left]...v[right] into increasing order  */
+void qsortchar(char *v[], int left, int right)
+{
+    int i, last;
+    void swap(char *[], int i, int j);
+    if (left >= right)
+        return;
+    swap(v, left, (left + right) / 2);
+    last = left;
+    for (i = left + 1; i <= right; i++)
+        if (strcmp(v[i], v[left]) < 0)
+            swap(v, ++last, i);
+    swap(v, left, last);
+    qsortchar(v, left, last - 1);
+    qsortchar(v, last + 1, right);
+}
+
+void swap(char *v[], int i, int j)
+{
+    char *temp;
+    temp = v[i];
+    v[i] = v[j];
+    v[j] = temp;
+}
+
+char *alloc(int n)
+{
+    if (allocbuf + ALLOCSIZE - allocp >= n) {
+        allocp += n;
+        return allocp - n;
+    } else
+        return 0;
+}
+
+void afree(char *p)
+{
+    if (p >= allocbuf && p < allocbuf + ALLOCSIZE)
+        allocp = p;
+}
