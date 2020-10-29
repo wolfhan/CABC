@@ -3,13 +3,10 @@
 #include <stdlib.h>
 #include "admin.h"
 
-#define MAXLEN 1000
-#define MAXBOOK 10000
-
-int findbookbyname(struct book *, char *);
-int savebook(struct book *, struct book);
-struct book *addbook(struct book *, struct book);
-struct book *removebook(struct book *, char *);
+/* Allocate buffer for struct book node. */
+struct book *balloc() {
+    return (struct book *) malloc(sizeof(struct book));
+}
 
 /* Put book on shelf and return whether it is successful or not.
    Insert the book info into file if on shelf, otherwise do nothing.*/
@@ -24,7 +21,7 @@ int putbookonshelf(struct book b) {
         printf("can't put duplicate book on.\n");
         return -2;
     } else {
-        return savebook(bp, b);
+        return savebookwithbook(bp, b);
     }
 }
 
@@ -111,7 +108,21 @@ int findbookbyname(struct book *bp, char *name) {
 }
 
 /* Save book into bookinfo file. Return 0 if the book is saved, otherwise negative digit. */
-int savebook(struct book *bp, struct book b) {
+int savebook(struct book *bp) {
+    FILE *fp;
+    if ((fp = fopen("bookinfo", "w")) != NULL) {
+        for (; bp != NULL; bp = bp->next)
+            fprintf(fp, "%s; %d; %d;\n", bp->name, bp->total, bp->left);
+        fclose(fp);
+        return 0;
+    } else {
+        printf("bookinfo file can't be opened in savebook function.\n");
+        return -1;
+    }
+}
+
+/* Save book into bookinfo file. Return 0 if the book is saved, otherwise negative digit. */
+int savebookwithbook(struct book *bp, struct book b) {
     if (bp != NULL) {
         int found = 0;
         struct book *bk;
@@ -134,7 +145,7 @@ int savebook(struct book *bp, struct book b) {
         fclose(fp);
         return 0;
     } else {
-        printf("bookinfo file can't be opened in savebook function.\n");
+        printf("bookinfo file can't be opened in savebookwithbook function.\n");
         return -1;
     }
 }
@@ -166,4 +177,26 @@ struct book *removebook(struct book *bp, char *name) {
     return bp;
 }
 
+/* Add one book */
+struct book *addbookbyone(struct book *bp, char *name) {
+    if (bp != NULL) {
+        if (strcmp(bp->name, name) == 0) {
+            if (bp->left < bp->total)
+                bp->left++;
+        } else
+            addbookbyone(bp->next, name);
+    }
+    return bp;
+}
 
+/* Remove one book */
+struct book *removebookbyone(struct book *bp, char *name) {
+    if (bp != NULL) {
+        if (strcmp(bp->name, name) == 0) {
+            if (bp->left > 0)
+                bp->left--;
+        } else
+            removebookbyone(bp->next, name);
+    }
+    return bp;
+}
